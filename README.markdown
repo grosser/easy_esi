@@ -1,6 +1,7 @@
-Simple yet powerful ESI.  
+Cached pages with dynamic partials == Easy ESI.
 
- - Simple
+Compared to 'standard/complicated/hard' ESI:
+
  - Testable
  - Per-controller
  - No global changes
@@ -12,6 +13,7 @@ Simple yet powerful ESI.
  - No new configuration language
  - No purge requests
  - No external dependencies
+ - ...
 
 Basics
 ======
@@ -36,8 +38,16 @@ Has no effect for non-esi controllers!
 
 Advanced
 ========
-Partials rendered using `esi_render` will render as esi-includes (`<esi:include .... />`) when you are inside an esi-controller,
-do not cache their result in a view-cache, which non-esi controllers use.
+Partials rendered inside an esi-controller, using `esi_render`, will render as esi-includes (`<esi:include .... />`).  
+Do not cache these results in a view-cache, which non-esi controllers use too.
+
+Normally ESI means having an extra server that parses `<esi>` tags and then calls your app to render these partials.
+Which adds a whole lot of new problems(passing arguments, login, expiration, security...).
+On top of that it will slow down your application unless you do everything so perfect that it gets
+faster then a action-cached request (which is really hard...).
+
+With 'hard' Esi, each `<esi>` tag causes a new, (yet small) request which needs to load all data anew.  
+With easy-esi, each `<esi>` tag causes a partial to be rendered, inside the current context, without loading any new data.
 
 Author
 ======
