@@ -30,7 +30,7 @@ class ActionController::Base
   protected
 
   def render_esi
-    response.body.gsub!(%r{<esi:include src="([^"]*)"/>}) do
+    response.body = response.body.gsub(%r{<esi:include src="([^"]*)"/>}) do
       @template.render esi_unserialize($1)
     end
   end
@@ -38,7 +38,8 @@ class ActionController::Base
   def esi_unserialize(string)
     if string.include? '=' # its a Hash ...
       string = CGI.unescape(string)
-      string.split('&').map{|kv| kv.split('=')}.inject({}){|hash, kv| hash[kv[0]]=kv[1];hash}
+      data = string.split('&').map{|kv| kv.split('=')}.inject({}){|hash, kv| hash[kv[0]]=kv[1];hash}
+      data.with_indifferent_access
     else
       string
     end
