@@ -1,8 +1,35 @@
+class EasyEsi
+  def self.include_for(data)
+    serialized = data.is_a?(Hash) ? data.to_query : data
+    %{<esi:include src="#{serialized}"/>}
+  end
+
+  def self.replace_includes(text)
+    text.gsub(%r{<esi:include src="([^"]*)"/>}) do
+      yield unserialize_include($1)
+    end
+  end
+
+  def self.unserialize_include(string)
+    string = CGI.unescape(string)
+    if string.include? '=' # it was a Hash ...
+      query_to_hash(string).with_indifferent_access
+    else
+      string
+    end
+  end
+
+  private
+
+  def self.query_to_hash(string)
+    string.split('&').map{|kv| kv.split('=')}.inject({}){|hash, kv| hash[kv[0]]=kv[1];hash}
+  end
+end
+
 class ActionView::Base
   def esi_render data
     if controller.esi_enabled
-      serialized = data.is_a?(Hash) ? data.to_query : data
-      %{<esi:include src="#{serialized}"/>}
+      EasyEsi.include_for data
     else
       render data
     end
@@ -30,18 +57,8 @@ class ActionController::Base
   protected
 
   def render_esi
-    response.body = response.body.gsub(%r{<esi:include src="([^"]*)"/>}) do
-      @template.render esi_unserialize($1)
-    end
-  end
-
-  def esi_unserialize(string)
-    if string.include? '=' # its a Hash ...
-      string = CGI.unescape(string)
-      data = string.split('&').map{|kv| kv.split('=')}.inject({}){|hash, kv| hash[kv[0]]=kv[1];hash}
-      data.with_indifferent_access
-    else
-      string
+    response.body = EasyEsi.replace_includes(response.body) do |data|
+      @template.render data
     end
   end
 end
