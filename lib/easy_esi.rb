@@ -1,22 +1,25 @@
 class EasyEsi
   def self.include_for(data)
-    serialized = data.is_a?(Hash) ? data.to_query : data
-    %{<esi:include src="#{serialized}"/>}
+    %{<esi:include src="#{serialize(data)}"/>}
   end
 
   def self.replace_includes(text)
     text.gsub(%r{<esi:include src="([^"]*)"/>}) do
-      yield unserialize_include($1)
+      yield unserialize($1)
     end
   end
 
-  def self.unserialize_include(string)
+  def self.unserialize(string)
     string = CGI.unescape(string)
     if string.include? '=' # it was a Hash ...
       query_to_hash(string).with_indifferent_access
     else
       string
     end
+  end
+
+  def self.serialize(data)
+    data.is_a?(Hash) ? data.to_query : data
   end
 
   private
