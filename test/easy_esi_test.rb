@@ -127,4 +127,10 @@ class EsiEnabledTest < ActionController::TestCase
     get :with_hash, :in_esi => 'D'
     @response.body.should == "From hash: D"
   end
+
+  test "it can serialize arbitrary data" do
+    data = {'src' => 'something else', 1 => :x, 2 => ['"','/','___----']}
+    get :serialize, :render_data => data
+    @response.body.should == data.inspect
+  end
 end
