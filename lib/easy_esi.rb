@@ -9,17 +9,12 @@ class EasyEsi
     end
   end
 
-  def self.unserialize(string)
-    string = CGI.unescape(string)
-    if string.include? '=' # it was a Hash ...
-      query_to_hash(string).with_indifferent_access
-    else
-      string
-    end
+  def self.unserialize(data)
+    YAML.load Base64.decode64(data)
   end
 
   def self.serialize(data)
-    data.is_a?(Hash) ? data.to_query : data
+    Base64.encode64 data.to_yaml
   end
 
   private
