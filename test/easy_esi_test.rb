@@ -134,3 +134,9 @@ class EsiEnabledTest < ActionController::TestCase
     @response.body.should == data.inspect
   end
 end
+
+class TestEasyEsi < ActionController::TestCase
+  test "it has a VERSION" do
+    EasyEsi::VERSION.should =~ /^\d+\.\d+\.\d+$/
+  end
+end

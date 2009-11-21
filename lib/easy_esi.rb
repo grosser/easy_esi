@@ -1,4 +1,6 @@
 class EasyEsi
+  VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip
+  
   def self.include_for(data)
     %{<esi:include src="#{serialize(data)}"/>}
   end
