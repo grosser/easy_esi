@@ -57,6 +57,7 @@ class ActionController::Base
   protected
 
   def render_esi
+    return if response.body.is_a? Proc
     response.body = EasyEsi.replace_includes(response.body) do |data|
       @template.render data
     end

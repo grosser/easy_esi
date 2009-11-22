@@ -86,6 +86,10 @@ class EsiEnabledController < EsiDisabledController
 
   def test_filter
   end
+
+  def send_a_file
+    send_file "VERSION"
+  end
 end
 
 class EsiEnabledTest < ActionController::TestCase
@@ -132,6 +136,11 @@ class EsiEnabledTest < ActionController::TestCase
     data = {'src' => 'something else', 1 => :x, 2 => ['"','/','___----']}
     get :serialize, :render_data => data
     @response.body.should == data.inspect
+  end
+
+  test "it can send a file" do
+    get :send_a_file
+    @response.body.is_a?(Proc).should == true
   end
 end
 
