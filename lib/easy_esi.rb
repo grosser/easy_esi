@@ -37,14 +37,23 @@ class ActionView::Base
   end
 end
 
-# when action_cache halts the filter chain, we still need to replace esi includes
+# replace cached includes
+# cache miss:
+#  filter_with_esi -> filter_without_esi -> after_filter -> filter_with_esi
+#  do not replace <include> in after filter, but after filter_without_esi
+#
+# cache hit:
+#  filter_with_esi -> filter_without_esi -> filter_with_esi
+#  after_filter will not be called, but <include> needs to be replaced
+#
 class ActionController::Caching::Actions::ActionCacheFilter
   def filter_with_esi(controller, &block)
-    controller.instance_variable_set "@do_not_replace", true
+    controller.instance_variable_set "@do_not_replace_esi", true
     result = filter_without_esi(controller, &block)
-    controller.instance_variable_set "@do_not_replace", false
-    puts controller.response_body+'filter'
+    controller.instance_variable_set "@do_not_replace_esi", false
+
     controller.send(:render_esi) if controller.esi_enabled
+
     result
   end
   alias_method_chain :filter, :esi
@@ -61,7 +70,7 @@ class ActionController::Base
   protected
 
   def render_esi
-    return if @do_not_replace or response_body.is_a?(File)
+    return if @do_not_replace_esi or not response_body.kind_of?(String)
     self.response_body = EasyEsi.replace_includes(response_body) do |data|
       _render_template(data)
     end
