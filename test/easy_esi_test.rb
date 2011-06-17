@@ -1,18 +1,26 @@
 require 'rubygems'
 require 'rspec'
+require 'active_support'
 require 'action_pack'
 require 'action_controller'
-require 'action_controller/test_process'
+require 'action_dispatch/testing/test_process'
 require 'test/unit'
-begin; require 'redgreen'; rescue LoadError; end
+require 'redgreen'
 $LOAD_PATH << 'lib'
 require 'init'
 
 ActionController::Routing::Routes.reload rescue nil
 ActionController::Base.cache_store = :memory_store
+ActionController::Base.logger = nil
+
+ROUTES = ActionDispatch::Routing::RouteSet.new
+ROUTES.draw do
+  match ':controller(/:action(/:id(.:format)))'
+end
+ROUTES.finalize!
 
 class EsiDisabledController < ActionController::Base
-  before_filter :set_view_paths
+  self.view_paths = 'test/views'
   caches_action :show, :random, :with_hash
 
   def random
@@ -29,16 +37,35 @@ class EsiDisabledController < ActionController::Base
     render :action => :show
   end
 
-  def set_view_paths
-    @template.view_paths = 'test/views'
+  def self._routes
+    ROUTES
+  end
+
+  def url_for(*args)
+    'xxx'
   end
 end
 
+# funky patch to get @routes working, in 'setup' did not work
+module ActionController::TestCase::Behavior
+  def process_with_routes(*args)
+    @routes = ROUTES
+    process_without_routes(*args)
+  end
+  alias_method_chain :process, :routes
+end
+
 class EsiDisabledTest < ActionController::TestCase
+  def initialize(*args)
+    super(*args)
+    @routes = ROUTES
+  end
+
   def setup
+    @routes = ROUTES
     @controller = EsiDisabledController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
+#    @request    = ActionController::TestRequest.new
+#    @response   = ActionController::TestResponse.new
   end
 
   test "caches actions" do

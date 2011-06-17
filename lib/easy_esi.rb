@@ -6,7 +6,7 @@ class EasyEsi
   end
 
   def self.replace_includes(text)
-    text.gsub(%r{<esi:include src="([^"]*)"/>}) do
+    text.gsub!(%r{<esi:include src="([^"]*)"/>}) do
       yield unserialize($1)
     end
   end
@@ -38,12 +38,12 @@ end
 
 # when action_cache halts the filter chain, we still need to replace esi includes
 class ActionController::Caching::Actions::ActionCacheFilter
-  def before_with_esi(controller)
-    result = before_without_esi(controller)
-    controller.send(:render_esi) if result == false and controller.esi_enabled
-    result
-  end
-  alias_method_chain :before, :esi
+#  def filter_with_esi(controller)
+#    result = filter_without_esi(controller)
+#    controller.send(:render_esi) if controller.esi_enabled
+#    result
+#  end
+#  alias_method_chain :filter, :esi
 end
 
 class ActionController::Base
@@ -57,8 +57,7 @@ class ActionController::Base
   protected
 
   def render_esi
-    return if response.body.is_a? Proc
-    response.body = EasyEsi.replace_includes(response.body) do |data|
+    EasyEsi.replace_includes(controller.response_body) do |data|
       @template.render data
     end
   end
