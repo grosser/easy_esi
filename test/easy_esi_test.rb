@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'spec'
+require 'rspec'
 require 'action_pack'
 require 'action_controller'
 require 'action_controller/test_process'
