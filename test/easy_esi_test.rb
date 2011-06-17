@@ -64,6 +64,7 @@ class EsiDisabledTest < ActionController::TestCase
   def setup
     @routes = ROUTES
     @controller = EsiDisabledController.new
+    @controller.cache_store.clear
 #    @request    = ActionController::TestRequest.new
 #    @response   = ActionController::TestResponse.new
   end
@@ -124,6 +125,7 @@ class EsiEnabledTest < ActionController::TestCase
     @controller = EsiEnabledController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+    @controller.cache_store.clear
   end
 
   test "caches actions" do
@@ -139,18 +141,18 @@ class EsiEnabledTest < ActionController::TestCase
 
   test "it renders correctly" do
     get :show, :in_action => 'A', :in_esi => 'B'
-    @response.body.should == "A B"
+    @response.body.strip.should == "A B"
   end
 
   test "it up-to-date esi partial when action was cached" do
     get :show, :in_action => 'A', :in_esi => 'B'
     get :show, :in_action => 'X', :in_esi => 'C'
-    @response.body.should == "A C"
+    @response.body.strip.should == "A C"
   end
 
   test "it renders up-to-date esi-partial when action was not cached" do
     get :uncached, :in_action => 'X', :in_esi => 'C'
-    @response.body.should == "X C"
+    @response.body.strip.should == "X C"
   end
 
   test "it renders up-to-date esi-partial with hash" do
@@ -162,12 +164,12 @@ class EsiEnabledTest < ActionController::TestCase
   test "it can serialize arbitrary data" do
     data = {'src' => 'something else', 1 => :x, 2 => ['"','/','___----']}
     get :serialize, :render_data => data
-    @response.body.should == data.inspect
+    @response.body.strip.should == data.inspect
   end
 
   test "it can send a file" do
     get :send_a_file
-    @response.body.is_a?(Proc).should == true
+    @response.body.should == File.read('VERSION')
   end
 end
 

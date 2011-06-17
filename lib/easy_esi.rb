@@ -2,11 +2,12 @@ class EasyEsi
   VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip
   
   def self.include_for(data)
-    %{<esi:include src="#{serialize(data)}"/>}
+    %{<esi:include src="#{serialize(data)}"/>}.html_safe
   end
 
   def self.replace_includes(text)
-    text.gsub!(%r{<esi:include src="([^"]*)"/>}) do
+    text.gsub(%r{<esi:include src="[^"]*"/>}) do |match|
+      match =~ /"(.*)"/
       yield unserialize($1)
     end
   end
@@ -16,7 +17,7 @@ class EasyEsi
   end
 
   def self.serialize(data)
-    Base64.encode64 data.to_yaml
+    Base64.encode64(data.to_yaml).gsub("\n",'')
   end
 
   private
@@ -38,12 +39,15 @@ end
 
 # when action_cache halts the filter chain, we still need to replace esi includes
 class ActionController::Caching::Actions::ActionCacheFilter
-#  def filter_with_esi(controller)
-#    result = filter_without_esi(controller)
-#    controller.send(:render_esi) if controller.esi_enabled
-#    result
-#  end
-#  alias_method_chain :filter, :esi
+  def filter_with_esi(controller, &block)
+    controller.instance_variable_set "@do_not_replace", true
+    result = filter_without_esi(controller, &block)
+    controller.instance_variable_set "@do_not_replace", false
+    puts controller.response_body+'filter'
+    controller.send(:render_esi) if controller.esi_enabled
+    result
+  end
+  alias_method_chain :filter, :esi
 end
 
 class ActionController::Base
@@ -57,8 +61,9 @@ class ActionController::Base
   protected
 
   def render_esi
-    EasyEsi.replace_includes(controller.response_body) do |data|
-      @template.render data
+    return if @do_not_replace or response_body.is_a?(File)
+    self.response_body = EasyEsi.replace_includes(response_body) do |data|
+      _render_template(data)
     end
   end
 end
