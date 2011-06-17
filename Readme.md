@@ -1,3 +1,5 @@
+[Rails 2 Version](http://github.com/grosser/easy_esi/tree/rails2)
+
 Cached pages with dynamic partials == Easy ESI.
 
 Compared to 'standard/complicated/hard' ESI:
