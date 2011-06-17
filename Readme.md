@@ -22,7 +22,7 @@ Basics
 **Up and running in 23 seconds or money back!**
 
 ### Install (5s)
-    rails plugin install git://github.com/grosser/easy_esi.git
+    rails plugin install git://github.com/grosser/easy_esi.git -r rails3
 
 ### Action-cache the controller (5s)
     class UserController < ApplicationController
