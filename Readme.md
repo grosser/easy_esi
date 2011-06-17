@@ -1,3 +1,5 @@
+[Rails 3 Instructions](http://github.com/grosser/easy_esi)
+
 Cached pages with dynamic partials == Easy ESI.
 
 Compared to 'standard/complicated/hard' ESI:
@@ -20,7 +22,7 @@ Basics
 **Up and running in 23 seconds or money back!**
 
 ### Install (5s)
-    rails plugin install git://github.com/grosser/easy_esi.git
+    ./script/plugin install git://github.com/grosser/easy_esi.git -r rails2
 
 ### Action-cache the controller (5s)
     class UserController < ApplicationController
