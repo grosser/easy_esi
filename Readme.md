@@ -20,7 +20,7 @@ Basics
 **Up and running in 23 seconds or money back!**
 
 ### Install (5s)
-    script/plugins install git://github.com/grosser/easy_esi.git
+    rails plugin install git://github.com/grosser/easy_esi.git
 
 ### Action-cache the controller (5s)
     class UserController < ApplicationController
@@ -38,7 +38,7 @@ Has no effect for non-esi controllers!
 
 Advanced
 ========
-Partials rendered inside an esi-controller, using `esi_render`, will render as esi-includes (`<esi:include .... />`).  
+Partials rendered inside an esi-controller, using `esi_render`, will render as esi-includes (`<esi:include .... />`).<br/>
 Do not cache these results in a view-cache, which non-esi controllers use too.
 
 Normally ESI means having an extra server that parses `<esi>` tags and then calls your app to render these partials.
@@ -46,11 +46,11 @@ Which adds a whole lot of new problems(passing arguments, login, expiration, sec
 On top of that it will slow down your application unless you do everything so perfect that it gets
 faster then a action-cached request (which is really hard...).
 
-With 'hard' Esi, each `<esi>` tag causes a new, (yet small) request which needs to load all data anew.  
+With 'hard' Esi, each `<esi>` tag causes a new, (yet small) request which needs to load all data anew.<br/>
 With easy-esi, each `<esi>` tag causes a partial to be rendered, inside the current context, without loading any new data.
 
 Author
 ======
-[Michael Grosser](http://pragmatig.wordpress.com)  
-grosser.michael@gmail.com  
+[Michael Grosser](http://grosser.it)<br/>
+michael@grosser.it<br/>
 Hereby placed under public domain, do what you want, just do not hold me accountable...
