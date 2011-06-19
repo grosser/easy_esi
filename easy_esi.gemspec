@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "Readme.md",
     "VERSION",
+    "easy_esi.gemspec",
     "init.rb",
     "lib/easy_esi.rb",
     "test/easy_esi_test.rb",
