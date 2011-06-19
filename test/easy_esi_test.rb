@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'rspec'
-require 'active_support'
+require 'active_support/all'
 require 'action_pack'
 require 'action_controller'
 require 'action_dispatch/testing/test_process'
@@ -9,9 +9,17 @@ require 'redgreen'
 $LOAD_PATH << 'lib'
 require 'init'
 
-ActionController::Routing::Routes.reload rescue nil
+# fake checks
+require 'ostruct'
+module ActionController::UrlFor
+  def _routes
+    helpers = OpenStruct.new
+    helpers.url_helpers = Module.new
+    helpers
+  end
+end
+
 ActionController::Base.cache_store = :memory_store
-ActionController::Base.logger = nil
 
 ROUTES = ActionDispatch::Routing::RouteSet.new
 ROUTES.draw do
@@ -56,17 +64,9 @@ module ActionController::TestCase::Behavior
 end
 
 class EsiDisabledTest < ActionController::TestCase
-  def initialize(*args)
-    super(*args)
-    @routes = ROUTES
-  end
-
   def setup
-    @routes = ROUTES
     @controller = EsiDisabledController.new
     @controller.cache_store.clear
-#    @request    = ActionController::TestRequest.new
-#    @response   = ActionController::TestResponse.new
   end
 
   test "caches actions" do
@@ -118,13 +118,15 @@ class EsiEnabledController < EsiDisabledController
   def send_a_file
     send_file "VERSION"
   end
+
+  def url_for(*args)
+    'xxx'
+  end
 end
 
 class EsiEnabledTest < ActionController::TestCase
   def setup
     @controller = EsiEnabledController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     @controller.cache_store.clear
   end
 

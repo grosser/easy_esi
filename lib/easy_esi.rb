@@ -72,6 +72,7 @@ class ActionController::Base
   def render_esi
     return if @do_not_replace_esi or not response_body.kind_of?(String)
     self.response_body = EasyEsi.replace_includes(response_body) do |data|
+      data = {:partial => data} if data.kind_of?(String)
       _render_template(data)
     end
   end
