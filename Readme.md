@@ -10,6 +10,9 @@ Basics
 ### Install (5s)
 [Rails 2 Version](http://github.com/grosser/easy_esi/tree/rails2)
 
+    gem install easy_esi
+Or
+
     rails plugin install git://github.com/grosser/easy_esi.git
 
 ### Action-cache the controller (5s)
