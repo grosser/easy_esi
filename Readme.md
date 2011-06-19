@@ -10,7 +10,7 @@ Basics
 ### Install (5s)
 [Rails 2 Version](http://github.com/grosser/easy_esi/tree/rails2)
 
-    rails plugin install git://github.com/grosser/easy_esi.git -r rails3
+    rails plugin install git://github.com/grosser/easy_esi.git
 
 ### Action-cache the controller (5s)
     class UsersController < ApplicationController
