@@ -13,6 +13,7 @@ begin
     gem.email = "michael@grosser.it"
     gem.homepage = "http://github.com/grosser/#{gem.name}"
     gem.authors = ["Michael Grosser"]
+    gem.add_runtime_dependency 'activerecord'
   end
 
   Jeweler::GemcutterTasks.new
