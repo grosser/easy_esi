@@ -1,8 +1,13 @@
 require 'rake/testtask'
-Rake::TestTask.new(:default) do |test|
+Rake::TestTask.new(:test) do |test|
   test.libs << 'lib'
   test.pattern = 'test/**/*_test.rb'
   test.verbose = true
+end
+
+task :default do
+  sh "RAILS=3.0.10 bundle && bundle exec rake test"
+  sh "RAILS=3.1.0 bundle && bundle exec rake test"
 end
 
 begin

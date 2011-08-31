@@ -60,7 +60,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  actionpack (~> 3.1.0.rc4)
+  actionpack (~> 3)
   jeweler
   rake
   redgreen
