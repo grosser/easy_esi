@@ -116,7 +116,7 @@ class EsiEnabledTest < ActionController::TestCase
   end
 
   test "it can serialize arbitrary data" do
-    data = {'src' => 'something else', 1 => :x, 2 => ['"','/','___----']}
+    data = {'src' => 'something else', 1 => 'x', 2 => ['"','/','___----']}
     get :serialize, :render_data => data
     @response.body.strip.should == data.inspect
   end
