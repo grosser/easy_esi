@@ -6,8 +6,8 @@ Rake::TestTask.new(:test) do |test|
 end
 
 task :default do
-  sh "RAILS=3.0.10 bundle && bundle exec rake test"
-  sh "RAILS=3.1.0 bundle && bundle exec rake test"
+  sh "RAILS=3.0.10 && (bundle || bundle install) && bundle exec rake test"
+  sh "RAILS=3.1.0  && (bundle || bundle install) && bundle exec rake test"
 end
 
 begin

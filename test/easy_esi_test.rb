@@ -1,4 +1,4 @@
-require 'test/test_helper'
+require './test/test_helper'
 
 class EsiDisabledController < ActionController::Base
   self.view_paths = 'test/views'
