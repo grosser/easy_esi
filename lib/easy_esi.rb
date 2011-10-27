@@ -1,6 +1,6 @@
 class EasyEsi
   VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip
-  
+
   def self.include_for(data)
     %{<esi:include src="#{serialize(data)}"/>}.html_safe
   end
@@ -60,7 +60,11 @@ class ActionController::Caching::Actions::ActionCacheFilter
 end
 
 class ActionController::Base
-  class_inheritable_accessor :esi_enabled
+  if respond_to?(:class_attribute)
+    class_attribute :esi_enabled
+  else
+    class_inheritable_accessor :esi_enabled
+  end
 
   def self.enable_esi
     self.esi_enabled = true
@@ -70,8 +74,18 @@ class ActionController::Base
   protected
 
   def render_esi
-    return if @do_not_replace_esi or not response_body.kind_of?(String)
-    self.response_body = EasyEsi.replace_includes(response_body) do |data|
+    return if @do_not_replace_esi or not (response_body.kind_of?(String) or response_body.kind_of?(Array))
+
+    self.response_body = case
+      when response_body.kind_of?(Array)
+        response_body.collect { |e| render_and_replace_esi(e) }
+      when response_body.kind_of?(String)
+        self.response_body = render_and_replace_esi(response_body)
+      end
+  end
+
+  def render_and_replace_esi text
+    EasyEsi.replace_includes(text) do |data|
       data = {:partial => data} if data.kind_of?(String)
       _render_template(data)
     end

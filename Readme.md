@@ -31,7 +31,7 @@ Has no effect for non-esi controllers!
     IS NOW
     <%= esi_render :partial => 'profile', :locals => {:local_variable => :foo} %>
 
-### Realize that its that simple (10s)
+### Realize that it's that simple (10s)
 
 Behind the scenes
 =================
