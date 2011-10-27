@@ -60,7 +60,11 @@ class ActionController::Caching::Actions::ActionCacheFilter
 end
 
 class ActionController::Base
-  class_inheritable_accessor :esi_enabled
+  if respond_to?(:class_attribute)
+    class_attribute :esi_enabled
+  else
+    class_inheritable_accessor :esi_enabled
+  end
 
   def self.enable_esi
     self.esi_enabled = true
