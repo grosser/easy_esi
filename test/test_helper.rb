@@ -6,7 +6,7 @@ require 'action_controller'
 require 'test/unit'
 require 'redgreen'
 $LOAD_PATH << 'lib'
-require 'init'
+require './init'
 
 ActionController::Base.cache_store = :memory_store
 
