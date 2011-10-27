@@ -4,13 +4,13 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{easy_esi}
-  s.version = "0.2.2"
+  s.name = "easy_esi"
+  s.version = "0.2.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Grosser"]
-  s.date = %q{2011-06-19}
-  s.email = %q{michael@grosser.it}
+  s.date = "2011-10-27"
+  s.email = "michael@grosser.it"
   s.files = [
     "CHANGELOG",
     "Gemfile",
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
     "init.rb",
     "lib/easy_esi.rb",
     "test/easy_esi_test.rb",
+    "test/test_helper.rb",
     "test/views/esi_disabled/_a_partial.erb",
     "test/views/esi_disabled/show.erb",
     "test/views/esi_disabled/test_filter.erb",
@@ -32,10 +33,10 @@ Gem::Specification.new do |s|
     "test/views/esi_enabled/show.erb",
     "test/views/esi_enabled/with_hash.erb"
   ]
-  s.homepage = %q{http://github.com/grosser/easy_esi}
+  s.homepage = "http://github.com/grosser/easy_esi"
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
-  s.summary = %q{Rails: Cached pages with updated partials}
+  s.rubygems_version = "1.8.10"
+  s.summary = "Rails: Cached pages with updated partials"
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
