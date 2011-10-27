@@ -74,14 +74,13 @@ class ActionController::Base
   protected
 
   def render_esi
-    return if @do_not_replace_esi or not (response_body.kind_of?(String) or response_body.kind_of?(Array))
+    return if @do_not_replace_esi
 
-    self.response_body = case
-      when response_body.kind_of?(Array)
-        response_body.collect { |e| render_and_replace_esi(e) }
-      when response_body.kind_of?(String)
-        self.response_body = render_and_replace_esi(response_body)
-      end
+    if response_body.kind_of?(Array) # Ruby 1.9
+      self.response_body = response_body.map { |body| render_and_replace_esi(body) }
+    elsif response_body.kind_of?(String)
+      self.response_body = render_and_replace_esi(response_body)
+    end
   end
 
   def render_and_replace_esi text
