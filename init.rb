@@ -1,1 +1,0 @@
-require 'easy_esi'

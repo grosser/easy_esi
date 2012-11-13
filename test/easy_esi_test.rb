@@ -72,7 +72,7 @@ class EsiEnabledController < EsiDisabledController
   end
 
   def send_a_file
-    send_file "VERSION"
+    send_file "Rakefile"
   end
 end
 
@@ -123,7 +123,7 @@ class EsiEnabledTest < ActionController::TestCase
 
   test "it can send a file" do
     get :send_a_file
-    @response.body.should == File.read('VERSION')
+    @response.body.should =~ /task :default/
   end
 end
 

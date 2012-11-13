@@ -1,6 +1,6 @@
-class EasyEsi
-  VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip
+require "easy_esi/version"
 
+module EasyEsi
   def self.include_for(data)
     %{<esi:include src="#{serialize(data)}"/>}.html_safe
   end
