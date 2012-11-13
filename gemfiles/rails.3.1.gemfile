@@ -3,6 +3,7 @@
 source :rubygems
 
 gem "bump"
+gem "test-unit"
 gem "actionpack", "~>3.1.0"
 gem "rake"
 gem "appraisal"
