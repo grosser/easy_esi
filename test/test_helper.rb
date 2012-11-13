@@ -4,9 +4,11 @@ require 'active_support/all'
 require 'action_pack'
 require 'action_controller'
 require 'test/unit'
-require 'redgreen'
 $LOAD_PATH << 'lib'
 require './init'
+
+# rails 2 vs ruby 1.9.3
+MissingSourceFile::REGEXPS << [/^cannot load such file -- (.+)$/i, 1]
 
 ActionController::Base.cache_store = :memory_store
 

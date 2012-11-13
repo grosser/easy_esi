@@ -47,9 +47,9 @@ end
 #  after_filter will not be called, but <include> needs to be replaced
 #
 class ActionController::Caching::Actions::ActionCacheFilter
-  def filter_with_esi(controller, &block)
+  def filter_with_esi(controller, *args, &block)
     controller.instance_variable_set "@do_not_replace_esi", true
-    result = filter_without_esi(controller, &block)
+    result = filter_without_esi(controller, *args, &block)
     controller.instance_variable_set "@do_not_replace_esi", false
 
     controller.send(:render_esi) if controller.esi_enabled

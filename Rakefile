@@ -1,4 +1,6 @@
 require 'rake/testtask'
+require 'appraisal'
+
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib'
   test.pattern = 'test/**/*_test.rb'
@@ -6,8 +8,7 @@ Rake::TestTask.new(:test) do |test|
 end
 
 task :default do
-  sh "RAILS=3.0.10 && (bundle || bundle install) && bundle exec rake test"
-  sh "RAILS=3.1.0  && (bundle || bundle install) && bundle exec rake test"
+  sh "bundle exec rake appraisal:install && bundle exec rake appraisal test"
 end
 
 begin
