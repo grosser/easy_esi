@@ -37,34 +37,24 @@ class ActionView::Base
   end
 end
 
-# replace cached includes
-# cache miss:
-#  filter_with_esi -> filter_without_esi -> after_filter -> filter_with_esi
-#  do not replace <include> in after filter, but after filter_without_esi
-#
-# cache hit:
-#  filter_with_esi -> filter_without_esi -> filter_with_esi
-#  after_filter will not be called, but <include> needs to be replaced
-#
-class ActionController::Caching::Actions::ActionCacheFilter
-  def filter_with_esi(controller, *args, &block)
-    controller.instance_variable_set "@do_not_replace_esi", true
-    result = filter_without_esi(controller, *args, &block)
-    controller.instance_variable_set "@do_not_replace_esi", false
-
-    controller.send(:render_esi) if controller.esi_enabled
-
-    result
-  end
-  alias_method_chain :filter, :esi
-end
-
 class ActionController::Base
-  if respond_to?(:class_attribute)
-    class_attribute :esi_enabled
-  else
-    class_inheritable_accessor :esi_enabled
+  # replace cached includes
+  # cache miss:
+  #  filter_with_esi -> filter_without_esi -> after_filter -> filter_with_esi
+  #  do not replace <include> in after filter, but after filter_without_esi
+  #
+  # cache hit:
+  #  filter_with_esi -> filter_without_esi -> filter_with_esi
+  #  after_filter will not be called, but <include> needs to be replaced
+  around_filter :render_with_esi
+  def render_with_esi
+    @do_not_replace_esi = true
+    yield
+    @do_not_replace_esi = false
+    render_esi if esi_enabled
   end
+
+  class_attribute :esi_enabled
 
   def self.enable_esi
     self.esi_enabled = true
