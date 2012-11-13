@@ -9,5 +9,6 @@ Gem::Specification.new name, EasyEsi::VERSION do |s|
   s.homepage = "http://github.com/grosser/#{name}"
   s.summary = "Rails: Cached pages with updated partials"
   s.add_runtime_dependency "actionpack", ">= 2"
+  s.license = "MIT"
 end
 
